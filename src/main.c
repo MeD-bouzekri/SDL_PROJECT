@@ -13,12 +13,14 @@ struct Node {
     struct Node* left;
     struct Node* right;
 };
+// creat a node
 struct Node* createNode(int value) {
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node*));
     newNode->data = value;
     newNode->left = newNode->right = NULL;
     return newNode;
 }
+//insert new node
 struct Node* insertNode(struct Node* root, int value) {
     if (root == NULL) {
         return createNode(value);
@@ -35,17 +37,18 @@ struct Node* insertNode(struct Node* root, int value) {
 
     return root;
 }
+//search for a numbre
 struct Node* searchNode(struct Node* root, int value) {
     if (root == NULL || root->data == value) {
         return root;
     }
 
-    // Si la valeur est inférieure, recherche à gauche
+    // if the numbre is < root->data search from the left
     if (value < root->data) {
         return searchNode(root->left, value);
     }
 
-    // Si la valeur est supérieure, recherche à droite
+    // if the numbre is < root->data search from the right
     return searchNode(root->right, value);
 }
 struct Node* findMinNode(struct Node* node) {
@@ -54,38 +57,21 @@ struct Node* findMinNode(struct Node* node) {
     }
     return node;
 }
-void convertToChar5(int number, char result[5]) {
-    snprintf(result, 6, "%d", number);
-}
-void inOrderTraversalHelper(struct Node* root, char textBuffer[6]) {
-    if (root != NULL) {
-        inOrderTraversalHelper(root->left, textBuffer);
-        char tempBuffer[6];  // To account for the null terminator
-        convertToChar5(root->data, tempBuffer);
-        strcat(textBuffer, tempBuffer);
-        inOrderTraversalHelper(root->right, textBuffer);
-    }
-}
-
-void inOrderTraversal(struct Node* root, int *c, char textBuffer[6]) {
-    strcpy(textBuffer, "");  // Initialize textBuffer
-    *c = 1;
-    inOrderTraversalHelper(root, textBuffer);
-}
+// delet a node 
 struct Node* deleteNode(struct Node* root, int value) {
     if (root == NULL) {
         return root;
     }
 
-    // Recherche du nœud à supprimer
+    // search for the wanted node
     if (value < root->data) {
         root->left = deleteNode(root->left, value);
     } else if (value > root->data) {
         root->right = deleteNode(root->right, value);
     } else {
-        // Nœud trouvé, effectuer la suppression
+        // Node trouvé, effectuer la suppression
 
-        // Cas 1: Nœud avec un seul enfant ou pas d'enfant
+        // Cas 1: Node avec un seul enfant ou pas d'enfant
         if (root->left == NULL) {
             struct Node* temp = root->right;
             free(root);
@@ -96,7 +82,7 @@ struct Node* deleteNode(struct Node* root, int value) {
             return temp;
         }
 
-        // Cas 2: Nœud avec deux enfants
+        // Cas 2: Node avec deux enfants
         struct Node* temp = findMinNode(root->right);
         root->data = temp->data;
         root->right = deleteNode(root->right, temp->data);
@@ -105,30 +91,14 @@ struct Node* deleteNode(struct Node* root, int value) {
     return root;
 }
 
-
 SDL_Window *window;
 SDL_Renderer *rendrer;
 char textBuffer[20];
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
-void renderText(SDL_Renderer* renderer, TTF_Font* font, const char* text, int x, int y ,SDL_Surface *s) {
-    SDL_Color textColor = {0, 0, 255}; 
 
-    SDL_Surface* numsurface = TTF_RenderText_Solid(font, text, textColor);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, numsurface);
 
-    SDL_Rect textRect;
-    textRect.x = x;
-    textRect.y = y;
-    textRect.w = numsurface->w;
-    textRect.h = numsurface->h;
-
-    
-    SDL_BlitSurface(numsurface, NULL,s,&textRect);
-    
-    
-    
-}
+// from int to char
 bool isInteger(const char* string) {
     if (*string == '\0') {
         return false;  // Empty string
@@ -182,7 +152,7 @@ void drawBinaryTree(SDL_Renderer* renderer, struct Node* root, int x, int y, int
         return;
     }
 
-    // Draw connections to left child with curved lines
+    // Draw connections to left child 
     if (root->left != NULL) {
         int leftX = x - offsetX+20;
         int leftY = y + 80;
@@ -190,7 +160,7 @@ void drawBinaryTree(SDL_Renderer* renderer, struct Node* root, int x, int y, int
         drawBinaryTree(renderer, root->left, leftX, leftY, level + 1, offsetX / 2 + 30, numberToHighlight, Highlight, s);
     }
 
-    // Draw connections to right child with curved lines
+    // Draw connections to right child 
     if (root->right != NULL) {
         int rightX = x + offsetX+20;
         int rightY = y +80;
@@ -206,27 +176,26 @@ void drawBinaryTree(SDL_Renderer* renderer, struct Node* root, int x, int y, int
     // Use SDL_ttf to display the text
     SDL_Color textColor;
     if (Highlight == 1) {
-        textColor = (SDL_Color){255, 255, 255, 255}; // Set color for text
+        textColor = (SDL_Color){255, 255, 255, 255}; 
 
         if (root->data == numberToHighlight) {
-            textColor = (SDL_Color){39, 56, 70, 255}; // Change color for the highlighted number
+            textColor = (SDL_Color){39, 56, 70, 255}; 
         }
     } else {
         textColor = (SDL_Color){39, 56, 70, 255};
     }
 
-    TTF_Font* font = TTF_OpenFont("fonts/ARIALBD.TTF", 40);  // Open the font with size 40
+    TTF_Font* font = TTF_OpenFont("fonts/ARIALBD.TTF", 40);  
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, buffer, textColor);
     SDL_Rect textRect = {x - 10, y + 40, 20, 20};
 
     SDL_BlitSurface(textSurface, NULL, s, &textRect);
 }
 
-
+// this fenction is for (after searching for a number the user will be able to see the place of the wanted number )
 void drawBinaryTreen(SDL_Renderer* renderer, struct Node* root, int x, int y,int n, int level, int offsetX, int numberToHighlight, int Highlight ,SDL_Surface *s,bool so) {
     if (root == NULL) {
-        return;
-    }
+        return;}
     int f;
     if (so==true){f=0;}
     
@@ -236,37 +205,27 @@ void drawBinaryTreen(SDL_Renderer* renderer, struct Node* root, int x, int y,int
     SDL_RenderDrawLine(renderer, x - 20, y + 40, x + 20, y + 40);
     char buffer[6];
     sprintf(buffer, "%d", root->data);
-
     // Use SDL_ttf to display the text
     SDL_Color textColor;
     if (Highlight == 1) {
         if (so==true && f==0 && root->data==n){textColor = (SDL_Color){0, 255, 0, 255};f=f+1;so=false;}
             else  {textColor= (SDL_Color){255, 255, 255, 255};}  // Set color for text
-        
         if (root->data == numberToHighlight ) {
-            
-            
             if (so==true && f==0 && root->data==n){
                 textColor = (SDL_Color){0, 255, 0, 255};f=f+1;so=false;
             }else {textColor = (SDL_Color){39, 56, 70, 255}; // Change color for the highlighted number
             }
-            
-
         }
     } else {
         if (so==true && f==0 && root->data==n){
             textColor = (SDL_Color){0, 255, 0, 255};f=f+1;so=false;}
         else {textColor = (SDL_Color){39, 56, 70, 255};}
     }
-
     // Use SDL_ttf to display the text
     TTF_Font* font = TTF_OpenFont("fonts/ARIALI.TTF", 40);  // Open the font with size 20
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, buffer, textColor);
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     SDL_Rect textRect = {x - 10, y + 40, 20, 20};
-
-
-
     // Draw connections to left child
     if (root->left != NULL) {
         int leftX = x - offsetX;
@@ -274,35 +233,36 @@ void drawBinaryTreen(SDL_Renderer* renderer, struct Node* root, int x, int y,int
         SDL_RenderDrawLine(renderer, x, y + 60, leftX, leftY);
         drawBinaryTreen(renderer, root->left, leftX, leftY,n, level + 1, offsetX / 2 + 30, numberToHighlight, Highlight,s,so);
     }
-
     // Draw connections to right child
     if (root->right != NULL) {
         int rightX = x + offsetX;
         int rightY = y + 100;
         SDL_RenderDrawLine(renderer, x, y + 60, rightX, rightY);
-        drawBinaryTreen(renderer, root->right, rightX, rightY,n, level + 1, offsetX / 2 + 30, numberToHighlight, Highlight,s,so);
-    }
+        drawBinaryTreen(renderer, root->right, rightX, rightY,n, level + 1, offsetX / 2 + 30, numberToHighlight, Highlight,s,so);}
     SDL_BlitSurface(textSurface, NULL,s,&textRect);
     
 }
+//this fenction is for (if the user wanna delet a number while he's writing )
 void DEL(char *str, int index) {
     int len = strlen(str);
     memmove(&str[index], &str[index + 1], len - index);
 }
+
+
 int main(int argc , char *argv[]){
-    int RUNNING,x,y,l,l1,c;
+    int RUNNING,x,y,l,l1,c,n;
     bool k=false;bool handleMouseMotion = true;bool s=false;
     struct Node* root=NULL;struct Node* foundNode;
     SDL_Rect startButtonRect, exitButtonRect,insereButtonRect,recherchButtonRect,affichButtonRect,supprimButtonRect,quitButtonRect,idkButtonRect,inputrect;
     SDL_Rect center; 
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Surface *background ,*png_image,*gScreenSurface,*png_image1,*png_image2,*png_image3;
-    //SDL_Rect cursorRegion = { 200, 200, 400, 200 };
+    //the Cursor:
     SDL_Surface *cursorSurface = IMG_Load("images/mouse9.png");
     SDL_Cursor *customCursor = SDL_CreateColorCursor(cursorSurface,0,0);
     SDL_SetCursor(customCursor);
     
-    
+    //sounds:
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT,2,2048);
     Mix_VolumeMusic(100);
     Mix_Music* music = Mix_LoadMUS("sounds/background.ogg");
@@ -320,22 +280,23 @@ int main(int argc , char *argv[]){
     center.w=SCREEN_WIDTH;
     center.x = (SCREEN_WIDTH - center.w) / 2;  // Center horizontally
     center.y = (SCREEN_HEIGHT - center.h) / 2; // Center vertically
-    SDL_KeyCode key;
-    TTF_Init();
     
+    TTF_Init();
     TTF_Font *Font=TTF_OpenFont("fonts/ARIBLK.TTF",65);
+    
     SDL_Color textColor= { 0,0,0},texth= { 0,114,255};
+    
     SDL_Surface *startButtonSurface = TTF_RenderText_Solid(Font, "START", textColor);
     SDL_Surface *exitButtonSurface = TTF_RenderText_Solid(Font, "EXIT", textColor);
-    SDL_Texture *startButtonTexture = SDL_CreateTextureFromSurface(rendrer, startButtonSurface);
-    SDL_Texture *exitButtonTexture = SDL_CreateTextureFromSurface(rendrer, exitButtonSurface);
     SDL_Surface *inserButtonSurface = TTF_RenderText_Solid(Font, "Insert", textColor);
     SDL_Surface *affichButtonSurface = TTF_RenderText_Solid(Font, "Diplay", textColor);
     SDL_Surface *recherchButtonSurface = TTF_RenderText_Solid(Font, "Search", textColor);
     SDL_Surface *supprimButtonSurface = TTF_RenderText_Solid(Font, "Delete", textColor);
     SDL_Surface *quitButtonSurface = TTF_RenderText_Solid(Font, "Exit", textColor);
     SDL_Surface *idkButtonSurface = TTF_RenderText_Solid(Font, "Enter your number:", textColor);
-    //SDL_Surface *inputButtonSurface = TTF_RenderText_Solid(Font, input, textColor);
+    
+    SDL_Texture *startButtonTexture = SDL_CreateTextureFromSurface(rendrer, startButtonSurface);
+    SDL_Texture *exitButtonTexture = SDL_CreateTextureFromSurface(rendrer, exitButtonSurface);
     SDL_Texture *insereButtonTexture = SDL_CreateTextureFromSurface(rendrer, inserButtonSurface);
     SDL_Texture *affichButtonTexture = SDL_CreateTextureFromSurface(rendrer, affichButtonSurface);
     SDL_Texture *recherchButtonTexture = SDL_CreateTextureFromSurface(rendrer, recherchButtonSurface);
@@ -353,21 +314,21 @@ int main(int argc , char *argv[]){
     idkButtonRect.x=651;idkButtonRect.y=497;idkButtonRect.w=idkButtonSurface->w;idkButtonRect.h=idkButtonSurface->h;
     
     SDL_Event event;
-    RUNNING=1;
-    int n;
+    SDL_KeyCode key;
+    
     gScreenSurface=SDL_GetWindowSurface(window);
     png_image=IMG_Load("images/start.png");
     png_image1=IMG_Load("images/idk.png");
     png_image2=IMG_Load("images/idk2.png");
     png_image3=IMG_Load("images/idk3.png");
+    
+    RUNNING=1;
     while (RUNNING!=0 )
     {
         
         SDL_BlitSurface(background, NULL,gScreenSurface, NULL);
         SDL_BlitSurface(startButtonSurface, NULL,gScreenSurface,&startButtonRect);
         SDL_BlitSurface(exitButtonSurface, NULL,gScreenSurface,&exitButtonRect);
-        
-        
         SDL_UpdateWindowSurface( window );
 
         while(SDL_PollEvent(&event)){
@@ -434,8 +395,6 @@ int main(int argc , char *argv[]){
                                                         if(strlen(textBuffer)<=5){
                                                         if (isInteger(event.text.text)){
                                                         strcat(textBuffer, event.text.text);
-                                                        
-                                                        
                                                         case SDL_KEYDOWN :
                                                             key = event.key.keysym.sym;
                                                             if(key == SDLK_KP_ENTER ) {k=true;n = atoi(textBuffer);root=insertNode(root,n);}
@@ -443,9 +402,8 @@ int main(int argc , char *argv[]){
                                                             else if(key == SDLK_F1) RUNNING = 0;
                                                             textRect.x = x;
                                                             textRect.y = y;
-                                                            
                                                             break;
-
+                                                        
                                                         break;    
                                                         }
                                                         }
@@ -670,6 +628,7 @@ int main(int argc , char *argv[]){
                                     }
                             if(event.button.x>772 && event.button.x<1151 && event.button.y>889 && event.button.y<1150){RUNNING=0;Mix_PlayChannel(-1,exit,0);SDL_Delay(1500) ;}
                             break;
+                        //the mouse motion:
                         case SDL_MOUSEMOTION:
                             if (event.button.x>772 && event.button.x<1151 && event.button.y>300 && event.button.y<410)
                             {
@@ -701,6 +660,7 @@ int main(int argc , char *argv[]){
                 break;
                 
             break;
+            //the mouse motion:
             case SDL_MOUSEMOTION:
                 if (event.button.x>772 && event.button.x<1151 && event.button.y>552 && event.button.y<683)
                 {

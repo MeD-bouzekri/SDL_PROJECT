@@ -260,7 +260,7 @@ void drawBinaryTreen(SDL_Renderer* renderer, struct Node* root, int x, int y,int
     }
 
     // Use SDL_ttf to display the text
-    TTF_Font* font = TTF_OpenFont("fonts/ARIALI.TTF", 20);  // Open the font with size 20
+    TTF_Font* font = TTF_OpenFont("fonts/ARIALI.TTF", 40);  // Open the font with size 20
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, buffer, textColor);
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     SDL_Rect textRect = {x - 10, y + 40, 20, 20};
@@ -493,8 +493,8 @@ int main(int argc , char *argv[]){
                                         
                                     }
                                     if(event.button.x>772 && event.button.x<1151 && event.button.y>576 && event.button.y<684){
-                                        Mix_PlayChannel(-1,win,0);
-                                        SDL_Delay(300) ;
+                                        if (s==false){Mix_PlayChannel(-1,win,0);
+                                        SDL_Delay(300) ;}
                                         strcpy(textBuffer,"");
                                         while (RUNNING!=0 && k==false)
                                         {
@@ -566,8 +566,7 @@ int main(int argc , char *argv[]){
                                             }
                                             if (s==true &&l==0)
                                             {
-                                                Mix_PlayChannel(-1,win,0);
-                                                SDL_Delay(300) ;
+                                                
                                                 while (RUNNING!=0 && k==false)
                                                 {
                                                     
@@ -584,7 +583,7 @@ int main(int argc , char *argv[]){
                                                             key = event.key.keysym.sym;
                                                             if(key == SDLK_KP_ENTER) {
                                                                 s=false; }
-                                                            else if(key ==SDLK_ESCAPE ){k=true;}
+                                                            else if(key ==SDLK_ESCAPE ){s=false;}
                                                             else if(key == SDLK_F1) {RUNNING = 0;
                                                             }
                                                         }
@@ -594,11 +593,15 @@ int main(int argc , char *argv[]){
                                                     SDL_BlitSurface(png_image2,NULL,gScreenSurface,NULL);
                                                     drawBinaryTreen(rendrer,root,x,y,n,50,150,50,50,gScreenSurface,s);
                                                     SDL_UpdateWindowSurface(window);
+                                                    s==false;
                                                     break;
                                                 }
+                                                k=false;
+                                            
                                             }
                                             
                                             SDL_UpdateWindowSurface(window);
+                                            
                                         }
                                         
                                     }
@@ -712,5 +715,12 @@ int main(int argc , char *argv[]){
         }
     
     }
+    SDL_FreeSurface(background);
+    TTF_CloseFont(Font);
+    SDL_DestroyRenderer(rendrer);
+    SDL_DestroyWindow(window);
+    TTF_Quit();
+    IMG_Quit();
+    SDL_Quit();
     return 0;
 }

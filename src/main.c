@@ -297,7 +297,7 @@ int main(int argc , char *argv[]){
     SDL_Rect center; 
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Surface *background ,*png_image,*gScreenSurface,*png_image1,*png_image2,*png_image3;
-    SDL_Rect cursorRegion = { 200, 200, 400, 200 };
+    //SDL_Rect cursorRegion = { 200, 200, 400, 200 };
     SDL_Surface *cursorSurface = IMG_Load("images/mouse9.png");
     SDL_Cursor *customCursor = SDL_CreateColorCursor(cursorSurface,0,0);
     SDL_SetCursor(customCursor);
@@ -324,7 +324,7 @@ int main(int argc , char *argv[]){
     TTF_Init();
     
     TTF_Font *Font=TTF_OpenFont("fonts/ARIBLK.TTF",65);
-    SDL_Color textColor= { 0,0,0};
+    SDL_Color textColor= { 0,0,0},texth= { 0,114,255};
     SDL_Surface *startButtonSurface = TTF_RenderText_Solid(Font, "START", textColor);
     SDL_Surface *exitButtonSurface = TTF_RenderText_Solid(Font, "EXIT", textColor);
     SDL_Texture *startButtonTexture = SDL_CreateTextureFromSurface(rendrer, startButtonSurface);
@@ -384,6 +384,7 @@ int main(int argc , char *argv[]){
                     RUNNING=0;
                     break;
                 }
+            
             case SDL_MOUSEBUTTONUP:
                 
                 if(event.button.x>772 && event.button.x<1151 && event.button.y>552 && event.button.y<683 ){
@@ -664,16 +665,49 @@ int main(int argc , char *argv[]){
                                             SDL_UpdateWindowSurface(window);
                                         }
                                     }
-                            if(event.button.x>772 && event.button.x<1151 && event.button.y>889 && event.button.y<1150){RUNNING=0;Mix_PlayChannel(-1,exit,0);SDL_Delay(1000) ;}
+                            if(event.button.x>772 && event.button.x<1151 && event.button.y>889 && event.button.y<1150){RUNNING=0;Mix_PlayChannel(-1,exit,0);SDL_Delay(1500) ;}
                             break;
-                    }
+                        case SDL_MOUSEMOTION:
+                            if (event.button.x>772 && event.button.x<1151 && event.button.y>300 && event.button.y<410)
+                            {
+                                inserButtonSurface = TTF_RenderText_Solid(Font, "Insert", texth);
+                            }else {inserButtonSurface = TTF_RenderText_Solid(Font, "Insert", textColor);}
+                            if (event.button.x>772 && event.button.x<1151 && event.button.y>443 && event.button.y<554)
+                            {
+                                affichButtonSurface = TTF_RenderText_Solid(Font, "Diplay", texth);
+                            }else {affichButtonSurface = TTF_RenderText_Solid(Font, "Diplay", textColor);}
+                            if (event.button.x>772 && event.button.x<1151 && event.button.y>576 && event.button.y<684)
+                            {
+                                recherchButtonSurface = TTF_RenderText_Solid(Font, "Search", texth);
+                            }else {recherchButtonSurface = TTF_RenderText_Solid(Font, "Search", textColor);}
+                            if (event.button.x>772 && event.button.x<1151 && event.button.y>710 && event.button.y<816)
+                            {
+                                supprimButtonSurface = TTF_RenderText_Solid(Font, "Delete", texth);
+                            }else {supprimButtonSurface = TTF_RenderText_Solid(Font, "Delete", textColor);}
+                            if (event.button.x>772 && event.button.x<1151 && event.button.y>889 && event.button.y<1150)
+                            {
+                                quitButtonSurface = TTF_RenderText_Solid(Font, "Exit", texth);
+                            }else {quitButtonSurface = TTF_RenderText_Solid(Font, "Exit", textColor);}
+                                
+                            break;
+                        }
                     }
                 }
                 }
-                if (event.button.x>772 && event.button.x<1151 && event.button.y>850 && event.button.y<1050){RUNNING=0; Mix_PlayChannel(-1,exit,0);SDL_Delay(1500);}
+                if (event.button.x>772 && event.button.x<1151 && event.button.y>810 && event.button.y<1050){RUNNING=0; Mix_PlayChannel(-1,exit,0);SDL_Delay(1500);}
                 break;
                 
             break;
+            case SDL_MOUSEMOTION:
+                if (event.button.x>772 && event.button.x<1151 && event.button.y>552 && event.button.y<683)
+                {
+                    startButtonSurface = TTF_RenderText_Solid(Font, "START", texth);
+                }else {startButtonSurface = TTF_RenderText_Solid(Font, "START", textColor);}
+                if (event.button.x>772 && event.button.x<1151 && event.button.y>810 && event.button.y<1050)
+                {
+                    exitButtonSurface = TTF_RenderText_Solid(Font, "EXIT", texth);
+                }else {exitButtonSurface = TTF_RenderText_Solid(Font, "EXIT", textColor);}
+                
             }
         }
     

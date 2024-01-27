@@ -154,18 +154,18 @@ void drawBinaryTree(SDL_Renderer* renderer, struct Node* root, int x, int y, int
 
     // Draw connections to left child 
     if (root->left != NULL) {
-        int leftX = x - offsetX+20;
-        int leftY = y + 80;
-        drawCurvedLine(s, x, y +40, leftX, leftY+40, 0, 0, 0, 255);
-        drawBinaryTree(renderer, root->left, leftX, leftY, level + 1, offsetX / 2 + 30, numberToHighlight, Highlight, s);
+        int leftX = x - offsetX + 40;  // Increased horizontal spacing
+        int leftY = y + 100;  // Adjusted vertical spacing
+        drawCurvedLine(s, x, y + 40, leftX, leftY + 40, 0, 0, 0, 255);
+        drawBinaryTree(renderer, root->left, leftX, leftY, level + 1, offsetX + 40, numberToHighlight, Highlight, s);
     }
 
     // Draw connections to right child 
     if (root->right != NULL) {
-        int rightX = x + offsetX+20;
-        int rightY = y +80;
-        drawCurvedLine(s, x, y +40, rightX, rightY+40, 0, 0,0, 255);
-        drawBinaryTree(renderer, root->right, rightX, rightY, level + 1, offsetX / 2 + 30, numberToHighlight, Highlight, s);
+        int rightX = x + offsetX + 40;  // Increased horizontal spacing
+        int rightY = y + 100;  // Adjusted vertical spacing
+        drawCurvedLine(s, x, y + 40, rightX, rightY + 40, 0, 0, 0, 255);
+        drawBinaryTree(renderer, root->right, rightX, rightY, level + 1, offsetX + 40, numberToHighlight, Highlight, s);
     }
 
     // Draw the current node
@@ -185,12 +185,13 @@ void drawBinaryTree(SDL_Renderer* renderer, struct Node* root, int x, int y, int
         textColor = (SDL_Color){39, 56, 70, 255};
     }
 
-    TTF_Font* font = TTF_OpenFont("fonts/ARIALBD.TTF", 40);  
+    TTF_Font* font = TTF_OpenFont("fonts/ARIALBD.TTF", 30);  
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, buffer, textColor);
     SDL_Rect textRect = {x - 10, y + 40, 20, 20};
 
     SDL_BlitSurface(textSurface, NULL, s, &textRect);
 }
+
 
 // this fenction is for (after searching for a number the user will be able to see the place of the wanted number )
 void drawBinaryTreen(SDL_Renderer* renderer, struct Node* root, int x, int y,int n, int level, int offsetX, int numberToHighlight, int Highlight ,SDL_Surface *s,bool so) {
@@ -222,7 +223,7 @@ void drawBinaryTreen(SDL_Renderer* renderer, struct Node* root, int x, int y,int
         else {textColor = (SDL_Color){39, 56, 70, 255};}
     }
     // Use SDL_ttf to display the text
-    TTF_Font* font = TTF_OpenFont("fonts/ARIALI.TTF", 40);  // Open the font with size 20
+    TTF_Font* font = TTF_OpenFont("fonts/ARIALI.TTF", 30);  // Open the font with size 20
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, buffer, textColor);
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
     SDL_Rect textRect = {x - 10, y + 40, 20, 20};
@@ -399,16 +400,17 @@ int main(int argc , char *argv[]){
                                                             key = event.key.keysym.sym;
                                                             if(key == SDLK_KP_ENTER ) {k=true;n = atoi(textBuffer);root=insertNode(root,n);}
                                                             else if(key ==SDLK_ESCAPE){k=true;}
-                                                            else if(key == SDLK_F1) RUNNING = 0;
+                                                            else if(key == SDLK_F1) {RUNNING = 0;}
                                                             textRect.x = x;
                                                             textRect.y = y;
-                                                            break;
-                                                        
-                                                        break;    
+                                                            
+                                                        break;  
                                                         }
-                                                        }
-                                                        case SDLK_BACKSPACE:
-                                                            DEL(textBuffer,strlen(textBuffer)-1);
+                                                    
+                                                    }
+                                                    
+                                                    case SDLK_BACKSPACE:
+                                                        DEL(textBuffer,strlen(textBuffer)-1);
                                                 }
                                             }
                                             idkButtonRect.x=651;idkButtonRect.y=497;
@@ -417,13 +419,21 @@ int main(int argc , char *argv[]){
                                             SDL_BlitSurface(TTF_RenderText_Solid(Font,textBuffer,textColor), NULL,gScreenSurface,&textRect);
                                             SDL_UpdateWindowSurface(window);
                                         }
+                                    
                                     }
+                                    
+                                    
                                     if (event.button.x>772 && event.button.x<1151 && event.button.y>443 && event.button.y<554)
                                     {
+                                        
+                                        
                                         Mix_PlayChannel(-1,win,0);
                                         SDL_Delay(300) ;
-                                        while (RUNNING!=0 && k==false)
+                                        bool exitloop=false;
+                                        while (RUNNING!=0 && exitloop==false)
                                         {
+                                            SDL_BlitSurface(png_image2,NULL,gScreenSurface,NULL);
+                                            SDL_UpdateWindowSurface(window);
                                             while (SDL_PollEvent(&event) )
                                             {
                                                 x=SCREEN_WIDTH/2;y=100;
@@ -436,16 +446,18 @@ int main(int argc , char *argv[]){
                                                 case SDL_KEYDOWN :
                                                     key = event.key.keysym.sym;
                                                     if(key == SDLK_KP_ENTER) {
-                                                        k=true; }
-                                                    else if(key ==SDLK_ESCAPE ){k=true;}
+                                                        exitloop=true; }
+                                                    else if(key ==SDLK_ESCAPE ){exitloop=true;}
                                                     else if(key == SDLK_F1) {RUNNING = 0;
                                                     }
+                                                    break;
                                                 }
                                                 
-                                                break;
-                                                }
-                                            SDL_BlitSurface(png_image2,NULL,gScreenSurface,NULL);
+                                                
+                                            }
+                                            
                                             drawBinaryTree(rendrer,root,x,y,50,150,50,50,gScreenSurface);
+                                            
                                             SDL_UpdateWindowSurface(window);
                                         }
                                         
@@ -489,14 +501,15 @@ int main(int argc , char *argv[]){
                                                                 
                                                             }
                                                             else if(key == SDLK_F2){s=true;}
-                                                            else if(key ==SDLK_ESCAPE){k=true;}
-                                                            else if(key == SDLK_F1) RUNNING = 0;
+                                                            else if(key ==SDLK_ESCAPE){k=true;l=2;}
+                                                            else if(key == SDLK_F1) {RUNNING = 0;}
                                                             textRect.x = x;
                                                             textRect.y = y;
                                                             
+                                                        break;
                                                         }
-                                                    break;
-                                                }
+                                                    
+                                                    }
                                                 
                                                 case SDLK_BACKSPACE:
                                                     DEL(textBuffer,strlen(textBuffer)-1);
@@ -540,8 +553,8 @@ int main(int argc , char *argv[]){
                                                         case SDL_KEYDOWN :
                                                             key = event.key.keysym.sym;
                                                             if(key == SDLK_KP_ENTER) {
-                                                                s=false; }
-                                                            else if(key ==SDLK_ESCAPE ){s=false;}
+                                                                s=false;l=2; }
+                                                            else if(key ==SDLK_ESCAPE ){s=false;l=2;}
                                                             else if(key == SDLK_F1) {RUNNING = 0;
                                                             }
                                                         }
@@ -595,7 +608,7 @@ int main(int argc , char *argv[]){
                                                         else if (foundNode ==NULL){l1=1;}
                                                     }
                                                     else if(key ==SDLK_ESCAPE){k=true;}
-                                                    else if(key == SDLK_F1) RUNNING = 0;
+                                                    else if(key == SDLK_F1) {RUNNING = 0;}
                                                     textRect.x = x;
                                                     textRect.y = y;
                                                     }

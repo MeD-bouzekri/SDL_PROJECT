@@ -1,8 +1,8 @@
-# SDL Workshop 💻
+# Binary Arbiter SDL Project 💻
 
 ## Overview
 
-Welcome to the SDL Workshop! This repository contains resources and examples to help you get started with Simple DirectMedia Layer (SDL), a cross-platform development library designed to provide low-level access to audio, keyboard, mouse, and display functions.
+Welcome to the Binary Arber SDL project! This repository contains examples to help you get started with Simple DirectMedia Layer (SDL), a cross-platform development library designed to provide low-level access to audio, keyboard, mouse, and display functions.
 
 ## Contents
 
@@ -14,7 +14,7 @@ Welcome to the SDL Workshop! This repository contains resources and examples to 
 
 ## Getting Started 🚀
 
-To begin with the SDL Workshop, follow these steps:
+To begin with the SDL project, follow these steps:
 
 ### Prerequisites
 

@@ -1,4 +1,4 @@
-# Binary Arbiter SDL Project 💻
+# Binary Arber SDL Project 💻
 
 ## Overview
 
